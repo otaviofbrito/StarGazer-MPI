@@ -3,28 +3,30 @@
 #include <stdio.h>
 #include <time.h>
 
-void randomize_matrix(int *matrix, int rows, int cols)
+#define MAX_FLOAT 10.0
+
+void randomize_matrix(float *matrix, int rows, int cols)
 {
   for (int i = 0; i < rows; i++)
   {
     for (int j = 0; j < cols; j++)
-      matrix[i * cols + j] = rand() % 100;
+      matrix[i * cols + j] = ((float)rand() / (float)RAND_MAX) * MAX_FLOAT;
   }
 }
 
-void sum_matrix(int *A, int *B, int *C, int dim)
+void sum_matrix(float *A, float *B, float *C, int dim)
 {
   for (int i = 0; i < dim; i++)
     C[i] = A[i] + B[i];
 }
 
-void print_matrix(int *matrix, int rows, int cols)
+void print_matrix(float *matrix, int rows, int cols)
 {
   for (int i = 0; i < rows; i++)
   {
     for (int j = 0; j < cols; j++)
     {
-      printf(" %d ", matrix[i * cols + j]);
+      printf(" %f ", matrix[i * cols + j]);
     }
     printf("\n");
   }
@@ -54,37 +56,42 @@ int main(int argc, char *argv[])
     {
       printf("Number of processes must be compatible with the number of rows!\n");
     }
+    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
     return EXIT_FAILURE;
   }
 
-  int *matrix_A = NULL;
-  int *matrix_B = NULL;
-  int *matrix_C = NULL;
+  float *matrix_A = NULL;
+  float *matrix_B = NULL;
+  float *matrix_C = NULL;
 
   if (rank == 0)
   {
-    matrix_A = (int *)malloc(dim * sizeof(int));
-    matrix_B = (int *)malloc(dim * sizeof(int));
-    matrix_C = (int *)malloc(dim * sizeof(int));
+    matrix_A = (float *)malloc(dim * sizeof(float));
+    matrix_B = (float *)malloc(dim * sizeof(float));
+    matrix_C = (float *)malloc(dim * sizeof(float));
     randomize_matrix(matrix_A, rows, cols);
     randomize_matrix(matrix_B, rows, cols);
   }
 
   int chunk_size = (rows / size) * cols;
-  int *portion_A = (int *)malloc(chunk_size * sizeof(int));
-  int *portion_B = (int *)malloc(chunk_size * sizeof(int));
+
+  float *portion_A = (float *)malloc(chunk_size * sizeof(float));
+  float *portion_B = (float *)malloc(chunk_size * sizeof(float));
 
   MPI_Scatter(matrix_A, chunk_size, MPI_INT, portion_A, chunk_size, MPI_INT, 0, MPI_COMM_WORLD);
   MPI_Scatter(matrix_B, chunk_size, MPI_INT, portion_B, chunk_size, MPI_INT, 0, MPI_COMM_WORLD);
 
-  int *portion_C = (int *)malloc(chunk_size * sizeof(int));
+  float *portion_C = (float *)malloc(chunk_size * sizeof(float));
   sum_matrix(portion_A, portion_B, portion_C, chunk_size);
 
   MPI_Gather(portion_C, chunk_size, MPI_INT, matrix_C, chunk_size, MPI_INT, 0, MPI_COMM_WORLD);
 
   if (rank == 0)
   {
+    printf("\n >Number of process: %d \n >%d rows/process \n >%d elements/process of %d total\n\n",
+           size, chunk_size / cols, chunk_size, dim);
+    printf("MATRIX A: \n");
     printf("MATRIX A: \n");
     print_matrix(matrix_A, rows, cols);
     printf("\nMATRIX B: \n");
@@ -100,6 +107,7 @@ int main(int argc, char *argv[])
   free(portion_B);
   free(portion_C);
 
+  MPI_Barrier(MPI_COMM_WORLD);
   MPI_Finalize();
   return EXIT_SUCCESS;
 }
