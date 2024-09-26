@@ -9,14 +9,16 @@
 
 int main(int argc, char *argv[])
 {
-
-  MPI_Init(&argc, &argv);
   int rank;
   int size;
+
+  MPI_Init(&argc, &argv);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
   int total;
+  int N;
+
   image *img = NULL;
 
   if (rank == 0)
@@ -24,11 +26,17 @@ int main(int argc, char *argv[])
     img = readPGM(PGM_PATH);
   }
 
+  // Compartilha a dimensao da matiz com os outros processos;
+  MPI_Bcast(&N, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
   // cada processo possuira um bloco da imagem
   image *img_block = (image *)malloc(sizeof(image));
-  int chunk_size = 0;
+  int block_size = img_block->width * img_block->height;
 
-  MPI_Scatter(img->matrix, chunk_size, MPI_UNSIGNED_CHAR, img_block->matrix, chunk_size, MPI_INT, 0, MPI_COMM_WORLD);
+  // Distribuir os blocos entre os processos
+  if (rank == 0)
+  {
+  }
 
   printf("%d %d", img_block->height, img_block->width);
 
