@@ -6,7 +6,7 @@
 #include "image.h"
 #include "rotulacao.h"
 
-#define PGM_PATH "data/test.pgm"
+#define PGM_PATH "data/estrelas1.pgm"
 
 int main(int argc, char *argv[])
 {
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
 
   printf("Processo %d recebeu bloco de %dx%d\n", rank, img_block->width, img_block->height);
 
-  label(img_block->matrix);
+  label(img_block);
 
   int process_count = 1;
 

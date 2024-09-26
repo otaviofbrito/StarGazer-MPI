@@ -14,8 +14,8 @@ int _find(int parent[], int i)
 
 void _union(int parent[], int i, int j)
 {
-  int x = find(parent, i);
-  int y = find(parent, j);
+  int x = _find(parent, i);
+  int y = _find(parent, j);
   parent[y] = x;
 }
 
