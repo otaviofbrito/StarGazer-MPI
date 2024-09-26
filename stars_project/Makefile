@@ -1,7 +1,7 @@
 CC = mpicc
-CFLAGS = -Wall -Iinclude
+CFLAGS = -Wall -Iimage
 LDFLAGS = -lm
-SRC = src/main.c src/image.c
+SRC = src/main.c image/image.c
 OBJ_DIR = object
 OBJ = $(SRC:src/%.c=$(OBJ_DIR)/%.o)
 
