@@ -1,5 +1,6 @@
 CC = mpicc
 CFLAGS = -Wall -Iinclude
+LDFLAGS = -lm
 SRC = src/main.c src/read.c src/image.c
 OBJ_DIR = object
 OBJ = $(SRC:src/%.c=$(OBJ_DIR)/%.o)
@@ -14,7 +15,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
 main: $(OBJ)
-	$(CC) -o main $(OBJ)
+	$(CC) -o main $(OBJ) $(LDFLAGS)
 
 clean:
 	rm -rf $(OBJ_DIR) main

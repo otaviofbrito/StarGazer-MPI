@@ -10,7 +10,6 @@ image *readPGM(const char *file)
   char formato[3];
   int altura, largura, maxValor;
 
-
   fp = fopen(file, "rb");
   if (fp == NULL)
   {
@@ -35,10 +34,7 @@ image *readPGM(const char *file)
 
   image *img = newImage(largura, altura, maxValor);
 
-  for (int i = 0; i < altura; i++)
-  {
-    fread(img->matrix[i], sizeof(unsigned char), largura, fp);
-  }
+  fread(img->matrix, sizeof(unsigned char), largura * altura, fp);
 
   fclose(fp);
 

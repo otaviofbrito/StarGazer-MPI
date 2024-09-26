@@ -5,7 +5,7 @@ typedef struct
   int width;
   int height;
   int maxValue;
-  unsigned char **matrix;
+  unsigned char *matrix;
 } image;
 
 image *newImage(int width, int height, int maxValue);
