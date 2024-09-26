@@ -9,3 +9,5 @@ typedef struct
 image *newImage(int width, int height, int maxValue);
 
 void freeImage(image *img);
+
+image *readPGM(const char *file);

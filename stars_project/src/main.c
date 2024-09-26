@@ -4,7 +4,6 @@
 #include <math.h>
 
 #include "image.h"
-#include "read.h"
 
 #define PGM_PATH "data/test.pgm"
 
