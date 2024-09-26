@@ -9,7 +9,7 @@ image *newImage(int width, int height, int maxValue)
   imagePGM->height = height;
   imagePGM->maxValue = maxValue;
 
-  imagePGM->matrix = (unsigned char *)malloc(height * width * sizeof(unsigned char));
+  imagePGM->matrix = malloc(height * width * sizeof(int));
 
   return imagePGM;
 }

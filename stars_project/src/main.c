@@ -6,7 +6,7 @@
 #include "image.h"
 #include "read.h"
 
-#define PGM_PATH "data/imagemp2.pgm"
+#define PGM_PATH "data/test.pgm"
 
 int main(int argc, char *argv[])
 {
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     {
       for (int j = 0; j < block_size_x; j++)
       {
-        img_block->matrix[i * block_size_x + j] = img->matrix[i * M + j];
+        img_block->matrix[i * block_size_x + j] = img->matrix[i * N + j];
       }
     }
 
@@ -89,12 +89,12 @@ int main(int argc, char *argv[])
         l = 0;
         for (int j = start_col; j < start_col + block_size_x; j++, l++)
         {
-          buffer->matrix[k * block_size_x + j] = img->matrix[i * M + j];
+          buffer->matrix[k * block_size_x + l] = img->matrix[i * N + j];
         }
       }
 
       // Send block
-      MPI_Send(buffer->matrix, block_size_x * block_size_y, MPI_UNSIGNED_CHAR, p, 0, MPI_COMM_WORLD);
+      MPI_Send(buffer->matrix, block_size_x * block_size_y, MPI_INT, p, 0, MPI_COMM_WORLD);
     }
     freeImage(buffer);
     freeImage(img);
@@ -102,15 +102,16 @@ int main(int argc, char *argv[])
   else
   {
     // Se nao for processo raiz -> Receber o bloco
-    MPI_Recv(img_block->matrix, block_size_x * block_size_y, MPI_UNSIGNED_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Recv(img_block->matrix, block_size_x * block_size_y, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
   }
 
   printf("Processo %d recebeu bloco de %dx%d\n", rank, img_block->width, img_block->height);
+
   /*
     Conta as estrelas
   */
 
-  int process_count = rank;
+  int process_count = 1;
 
   // Soma o resultado calculado em cada processo
   MPI_Reduce(&process_count, &total, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
@@ -120,6 +121,8 @@ int main(int argc, char *argv[])
   }
 
   freeImage(img_block);
+
+  MPI_Barrier(MPI_COMM_WORLD);
   MPI_Finalize();
   return EXIT_SUCCESS;
 }

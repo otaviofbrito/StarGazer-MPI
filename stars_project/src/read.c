@@ -34,7 +34,12 @@ image *readPGM(const char *file)
 
   image *img = newImage(largura, altura, maxValor);
 
-  fread(img->matrix, sizeof(unsigned char), largura * altura, fp);
+  for (int i = 0; i < altura * largura; i++)
+  {
+    int k;
+    fscanf(fp, "%d", &k);
+    img->matrix[i] = k;
+  }
 
   fclose(fp);
 
