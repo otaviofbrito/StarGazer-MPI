@@ -61,3 +61,25 @@ void label(image *img)
   }
   img->maxValue = numLabel;
 }
+
+int count_labels(image *img)
+{
+  int rows = img->height;
+  int cols = img->width;
+
+  int visited[1000] = {0};
+  int count = 0;
+
+  for (int i = 0; i < rows * cols; i++)
+  {
+    int label = img->matrix[i];
+
+    if (label != 0 && visited[label] == 0)
+    {
+      visited[label] = 1;
+      count++;
+    }
+  }
+
+  return count;
+}
