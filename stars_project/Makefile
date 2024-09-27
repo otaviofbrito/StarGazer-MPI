@@ -17,6 +17,11 @@ $(OBJ_DIR):
 main: $(OBJ)
 	$(CC) -o main $(OBJ) $(LDFLAGS)
 
+
+run: 
+	@echo "Executing the program with $(p) processes and image file <$(img)>"
+	mpirun -np $(p) ./main $(img)
+
 clean:
 	rm -rf $(OBJ_DIR) main
 	rm -rf ./data/*.csv

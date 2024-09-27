@@ -6,10 +6,16 @@
 #include "image.h"
 #include "rotulacao.h"
 
-#define PGM_PATH "data/estrelas1.pgm"
-
 int main(int argc, char *argv[])
 {
+  if (argc != 2)
+  {
+    printf("Usage: %s path/to/image.pgm\n", argv[0]);
+    return EXIT_FAILURE;
+  }
+
+  const char *PGM_PATH = argv[1];
+
   int rank;
   int size;
 
@@ -107,17 +113,17 @@ int main(int argc, char *argv[])
 
   printf("Processo %d recebeu bloco de %dx%d\n", rank, img_block->width, img_block->height);
 
-  label(img_block);
-
   // TODO: limiar
 
+  label(img_block);
   int process_count = count_labels(img_block);
+  printf("Processo %d encontrou %d estrelas.\n", rank, process_count);
 
   // Soma o resultado calculado em cada processo
   MPI_Reduce(&process_count, &total, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
   if (rank == 0)
   {
-    printf("\nSoma total da matriz: %d\n", total);
+    printf("\nTotal de estrelas encontradas: %d\n", total);
   }
 
   freeImage(img_block);
