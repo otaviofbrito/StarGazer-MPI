@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     M = img->height;
   }
 
-  // Compartilha a dimensao da matiz com os outros processos;
+  // Compartilha a dimensao da matriz com os outros processos;
   MPI_Bcast(&N, 1, MPI_INT, 0, MPI_COMM_WORLD);
   MPI_Bcast(&M, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
@@ -56,7 +56,8 @@ int main(int argc, char *argv[])
   }
 
   // Calcula o tamanho dos blocos
-  // cada processo possuira um bloco da imagem
+  // cada processo possuíra um bloco da imagem.
+  
   int block_size_x = N / sqrt_p;
   int block_size_y = M / sqrt_p;
 
