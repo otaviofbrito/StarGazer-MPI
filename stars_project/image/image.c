@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "image.h"
+
 image *newImage(int width, int height, int maxValue)
 {
   image *imagePGM = (image *)malloc(sizeof(image));
