@@ -109,7 +109,9 @@ int main(int argc, char *argv[])
 
   label(img_block);
 
-  int process_count = 1;
+  // TODO: limiar
+
+  int process_count = count_labels(img_block);
 
   // Soma o resultado calculado em cada processo
   MPI_Reduce(&process_count, &total, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
