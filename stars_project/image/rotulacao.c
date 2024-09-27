@@ -25,11 +25,20 @@ void label(image *img)
   int cols = img->width;
 
   int numLabel = 0;
-  int parent[1000];
-  for (int i = 0; i < 1000; i++)
+  int max_labels = rows * cols;
+  int *parent = (int *)malloc(max_labels * sizeof(int));
+
+  if (parent == NULL)
+  {
+    fprintf(stderr, "Erro ao alocar memória!\n");
+    exit(EXIT_FAILURE);
+  }
+
+  for (int i = 0; i < max_labels; i++)
   {
     parent[i] = i;
   }
+
   for (int i = 1; i < rows; i++)
   {
     for (int j = 1; j < cols; j++)
@@ -60,6 +69,8 @@ void label(image *img)
     img->matrix[i] = _find(parent, img->matrix[i]);
   }
   img->maxValue = numLabel;
+
+  free(parent);
 }
 
 int count_labels(image *img)
@@ -67,7 +78,12 @@ int count_labels(image *img)
   int rows = img->height;
   int cols = img->width;
 
-  int visited[1000] = {0};
+  int *visited = (int *)calloc(img->maxValue + 1, sizeof(int));
+  if (visited == NULL)
+  {
+    fprintf(stderr, "Erro ao alocar memória!\n");
+    exit(EXIT_FAILURE);
+  }
   int count = 0;
 
   for (int i = 0; i < rows * cols; i++)
@@ -81,5 +97,6 @@ int count_labels(image *img)
     }
   }
 
+  free(visited);
   return count;
 }
