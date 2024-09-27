@@ -115,10 +115,11 @@ int main(int argc, char *argv[])
 
   printf("Processo %d recebeu bloco de %dx%d\n", rank, img_block->width, img_block->height);
 
+  //Limiarizacao > rotulacao > contagem 
   threshold_image(img_block, 30);
-
   label(img_block);
   int process_count = count_labels(img_block);
+
   printf("Processo %d encontrou %d estrelas.\n", rank, process_count);
 
   // Soma o resultado calculado em cada processo
