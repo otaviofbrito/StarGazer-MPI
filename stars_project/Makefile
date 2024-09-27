@@ -1,7 +1,7 @@
 CC = mpicc
 CFLAGS = -Wall -Iimage
 LDFLAGS = -lm
-SRC = src/main.c image/image.c image/rotulacao.c
+SRC = src/main.c image/image.c image/rotulacao.c image/limiarizacao.c
 OBJ_DIR = object
 OBJ = $(SRC:src/%.c=$(OBJ_DIR)/%.o)
 

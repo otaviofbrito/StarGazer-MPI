@@ -5,6 +5,7 @@
 
 #include "image.h"
 #include "rotulacao.h"
+#include "limiarizacao.h"
 
 int main(int argc, char *argv[])
 {
@@ -63,7 +64,7 @@ int main(int argc, char *argv[])
 
   // Calcula o tamanho dos blocos
   // cada processo possuíra um bloco da imagem.
-  
+
   int block_size_x = N / sqrt_p;
   int block_size_y = M / sqrt_p;
 
@@ -114,7 +115,7 @@ int main(int argc, char *argv[])
 
   printf("Processo %d recebeu bloco de %dx%d\n", rank, img_block->width, img_block->height);
 
-  // TODO: limiar
+  threshold_image(img_block, 30);
 
   label(img_block);
   int process_count = count_labels(img_block);
