@@ -8,40 +8,6 @@
 #include "threshold.h"
 #include "distance_transform.h"
 
-// Encontra estrelas duplicadas na divisao central de cada bloco
-int find_duplicates(image *img)
-{
-  int dups = 0;
-  int v = img->height / 2; // Linha central vertical
-  int h = img->width / 2;  // Linha central horizontal
-
-  for (int i = 0; i < img->width; i++)
-  {
-    if (img->matrix[v * img->width + i] != 0)
-    {
-      dups++;
-      while (i < img->width && img->matrix[v * img->width + i] != 0)
-      {
-        i++;
-      }
-    }
-  }
-
-  for (int i = 0; i < img->height; i++)
-  {
-    if (img->matrix[i * img->width + h] != 0)
-    {
-      dups++;
-      while (i < img->height && img->matrix[i * img->width + h] != 0)
-      {
-        i++;
-      }
-    }
-  }
-
-  return dups;
-}
-
 int main(int argc, char *argv[])
 {
   if (argc != 3)
@@ -55,6 +21,7 @@ int main(int argc, char *argv[])
 
   int rank;
   int size;
+  int total, N, M;
 
   MPI_Init(&argc, &argv);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -71,12 +38,9 @@ int main(int argc, char *argv[])
     MPI_Finalize();
     return EXIT_FAILURE;
   }
-  // soma total e dimensao da matriz
-  int total;
-  int N, M;
 
+  // Ler imagem pgm
   image *img = NULL;
-
   if (rank == 0)
   {
     img = readPGM(PGM_PATH);
@@ -99,8 +63,7 @@ int main(int argc, char *argv[])
   }
 
   // Calcula o tamanho dos blocos
-  // cada processo possuíra um bloco da imagem.
-
+  // cada processo receberá um bloco da imagem.
   int block_size_x = N / sqrt_p;
   int block_size_y = M / sqrt_p;
 
@@ -141,7 +104,6 @@ int main(int argc, char *argv[])
       MPI_Send(buffer->matrix, block_size_x * block_size_y, MPI_INT, p, 0, MPI_COMM_WORLD);
     }
     freeImage(buffer);
-    // freeImage(img);
   }
   else
   {
@@ -158,7 +120,7 @@ int main(int argc, char *argv[])
    */
   threshold_image(img_block, THRESHOLD);
   distance_transform(img_block);
-  threshold_image(img_block, 3);
+  threshold_image(img_block, (int)(THRESHOLD / 20));
   label(img_block);
   int process_count = count_labels(img_block);
 

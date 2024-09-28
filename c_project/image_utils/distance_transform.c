@@ -13,7 +13,6 @@ void distance_transform(image *img)
   int rows = img->height;
   int columns = img->width;
 
-  // First pass: Top-left to bottom-right
   for (int i = 1; i < rows; i++)
   {
     for (int j = 1; j < columns; j++)
@@ -21,14 +20,13 @@ void distance_transform(image *img)
       int p = img->matrix[i * columns + j];
       if (p != 0)
       {
-        int a = img->matrix[(i - 1) * columns + j]; // Above
-        int b = img->matrix[i * columns + (j - 1)]; // Left
+        int a = img->matrix[(i - 1) * columns + j];
+        int b = img->matrix[i * columns + (j - 1)];
         img->matrix[i * columns + j] = min(a + 1, b + 1);
       }
     }
   }
 
-  // Second pass: Bottom-right to top-left
   for (int i = rows - 2; i >= 0; i--)
   {
     for (int j = columns - 2; j >= 0; j--)
@@ -36,12 +34,11 @@ void distance_transform(image *img)
       int p = img->matrix[i * columns + j];
       if (p != 0)
       {
-        int a = img->matrix[(i + 1) * columns + j]; // Below
-        int b = img->matrix[i * columns + (j + 1)]; // Right
+        int a = img->matrix[(i + 1) * columns + j];
+        int b = img->matrix[i * columns + (j + 1)];
         int current = img->matrix[i * columns + j];
         img->matrix[i * columns + j] = min(min(a + 1, b + 1), current);
 
-        // Update max after computing the new distance
         if (img->matrix[i * columns + j] > max)
         {
           max = img->matrix[i * columns + j];

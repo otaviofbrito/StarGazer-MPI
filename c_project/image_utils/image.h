@@ -1,6 +1,5 @@
 #pragma once
 
-#define AUTHOR "# https://github.com/otaviofbrito/StarGazer-MPI"
 #define COLS 20
 
 typedef struct

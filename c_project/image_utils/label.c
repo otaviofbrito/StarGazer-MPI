@@ -100,3 +100,41 @@ int count_labels(image *img)
   free(visited);
   return count;
 }
+
+// Encontra estrelas duplicadas na divisao central de cada bloco
+int find_duplicates(image *img)
+{
+  int dups = 0;
+  int v = img->height / 2; // Linha central vertical
+  int h = img->width / 2;  // Linha central horizontal
+
+  for (int i = 0; i < img->width; i++)
+  {
+    if (img->matrix[v * img->width + i] != 0)
+    {
+      dups++;
+      while (i < img->width && img->matrix[v * img->width + i] != 0)
+      {
+        i++;
+        if (i == h)
+          break;
+      }
+    }
+  }
+
+  for (int i = 0; i < img->height; i++)
+  {
+    if (img->matrix[i * img->width + h] != 0)
+    {
+      dups++;
+      while (i < img->height && img->matrix[i * img->width + h] != 0)
+      {
+        i++;
+        if (i == v)
+          break;
+      }
+    }
+  }
+
+  return dups;
+}
