@@ -18,7 +18,6 @@ $(OBJ_DIR):
 main: $(OBJ)
 	$(CC) -o main $(OBJ) $(LDFLAGS)
 
-
 run: 
 	@echo "[INFO] Usage: make run p=<number of process> img=<path/to/image.pgm> th=<threshold value>"
 	mpirun -np $(p) ./main ${th} $(img)
@@ -26,6 +25,5 @@ run:
 clean:
 	@echo "[INFO] Cleaning environment..."
 	rm -rf $(OBJ_DIR) main
-	rm -rf ./data/*.csv
 
 
