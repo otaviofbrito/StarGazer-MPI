@@ -1,0 +1,11 @@
+{
+  "files.associations": {
+    "*.ejs": "html",
+    "*.md": "c",
+    "stdio.h": "c",
+    "stdlib.h": "c",
+    "ctype.h": "c",
+    "image.h": "c",
+    "math.h": "c"
+  }
+}
