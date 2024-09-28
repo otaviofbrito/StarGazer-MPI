@@ -4,7 +4,6 @@
 #include <math.h>
 
 #include "image.h"
-#include "limiarizacao.h"
 
 void threshold_image(image *img, int threshold)
 {
@@ -27,4 +26,6 @@ void threshold_image(image *img, int threshold)
          // image -> matrix[i]
       }
    }
+
+   img->maxValue = 1;
 }

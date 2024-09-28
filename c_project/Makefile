@@ -1,7 +1,8 @@
 CC = mpicc
-CFLAGS = -Wall -Iimage
+UTILS = image_utils
+CFLAGS = -Wall -I$(UTILS)
 LDFLAGS = -lm
-SRC = src/main.c image/image.c image/rotulacao.c image/limiarizacao.c
+SRC = src/main.c $(UTILS)/image.c $(UTILS)/label.c $(UTILS)/threshold.c $(UTILS)/distance_transform.c
 OBJ_DIR = object
 OBJ = $(SRC:src/%.c=$(OBJ_DIR)/%.o)
 
@@ -19,10 +20,11 @@ main: $(OBJ)
 
 
 run: 
-	@echo "Executing the program with $(p) processes and image file <$(img)>"
-	mpirun -np $(p) ./main $(img)
+	@echo "[INFO] Usage: make run p=<number of process> img=<path/to/image.pgm> th=<threshold value>"
+	mpirun -np $(p) ./main ${th} $(img)
 
 clean:
+	@echo "[INFO] Cleaning environment..."
 	rm -rf $(OBJ_DIR) main
 	rm -rf ./data/*.csv
 

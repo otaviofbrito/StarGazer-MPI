@@ -4,18 +4,20 @@
 #include <math.h>
 
 #include "image.h"
-#include "rotulacao.h"
-#include "limiarizacao.h"
+#include "label.h"
+#include "threshold.h"
+#include "distance_transform.h"
 
 int main(int argc, char *argv[])
 {
-  if (argc != 2)
+  if (argc != 3)
   {
-    printf("Usage: %s path/to/image.pgm\n", argv[0]);
+    printf("Usage: %s <threshold> <path/to/image.pgm>\n", argv[0]);
     return EXIT_FAILURE;
   }
 
-  const char *PGM_PATH = argv[1];
+  const int THRESHOLD = atoi(argv[1]);
+  const char *PGM_PATH = argv[2];
 
   int rank;
   int size;
@@ -115,10 +117,14 @@ int main(int argc, char *argv[])
 
   printf("Processo %d recebeu bloco de %dx%d\n", rank, img_block->width, img_block->height);
 
-  // Limiarizacao > rotulacao > contagem
-  threshold_image(img_block, 55);
-  label(img_block);
-  int process_count = count_labels(img_block);
+  // Operacoes em cada bloco
+  //  Limiarizacao > rotulacao > contagem
+  threshold_image(img_block, THRESHOLD);
+  distance_transform(img_block);
+  //normalize(img, 255);
+  threshold_image(img_block, 3);
+  // label(img_block);
+  int process_count = 1; // count_labels(img_block);
 
   printf("Processo %d encontrou %d estrelas.\n", rank, process_count);
 
@@ -127,10 +133,11 @@ int main(int argc, char *argv[])
   if (rank == 0)
   {
     printf("\nTotal de estrelas encontradas: %d\n", total);
+
+    savePGM(img_block, "data/i2.pgm");
   }
 
   freeImage(img_block);
-
   MPI_Barrier(MPI_COMM_WORLD);
   MPI_Finalize();
   return EXIT_SUCCESS;

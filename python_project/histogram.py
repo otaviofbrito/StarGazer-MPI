@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plot
+import sys
 
 """
 The `Image` class represents an image with the following attributes:
@@ -59,9 +60,11 @@ def histogram(img: Image):
     return hist
 
 
-def main():
+def main(argc, argv):
+    if argc != 2:
+        raise RuntimeError(f"Usage: python {argv[0]} path/to/image.pgm")
 
-    img = readpgm("c_project/data/estrelas1.pgm")
+    img = readpgm(argv[1])
     plot.imshow(img.matrix, cmap='gray')
 
     plot.axis('off')
@@ -80,4 +83,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main(len(sys.argv), sys.argv)

@@ -33,14 +33,14 @@ image *readPGM(const char *file)
   fp = fopen(file, "rb");
   if (fp == NULL)
   {
-    perror("Erro ao abrir o arquivo");
+    perror("[ERROR] Error opening file while reading image");
     exit(1);
   }
 
   fgets(lines, 80, fp);
   if (lines[0] != 'P' || lines[1] != '2')
   {
-    fprintf(stderr, "Formato inválido: %s\n", lines);
+    fprintf(stderr, "Invalid format: %s\n", lines);
     fclose(fp);
     exit(1);
   }
@@ -64,8 +64,35 @@ image *readPGM(const char *file)
 
   fclose(fp);
 
-  printf("Largura: %d, Altura: %d\n", largura, altura);
-  printf("Valor máximo: %d\n", maxValor);
+  printf("H: %d, W: %d\n", largura, altura);
+  printf("Max gray level: %d\n", maxValor);
 
   return img;
+}
+
+void savePGM(image *img, char *name)
+{
+  FILE *fp;
+  char tp = '2';
+  fp = fopen(name, "w");
+  if (fp == NULL)
+  {
+    perror("[ERROR] Error opening file while saving image");
+    exit(1);
+  }
+  fprintf(fp, "P%c\n", tp);
+  fprintf(fp, "%d  %d\n", img->width, img->height);
+  fprintf(fp, "%d\n", img->maxValue);
+  int c = 0;
+  for (int i = 0; i < img->height * img->width; i++)
+  {
+    fprintf(fp, "%3d", img->matrix[i]);
+    c++;
+    if (c > COLS)
+    {
+      fprintf(fp, "\n");
+      c = 0;
+    }
+  }
+  fclose(fp);
 }
