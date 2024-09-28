@@ -52,7 +52,9 @@ make purge
 
 ```
 
-<img src="https://github.com/otaviofbrito/StarGazer-MPI/blob/misc/img/plot_hist.png" alt="Histogram"/>
+<p align="center">
+  <img width="460" height="600" alt="Histogram" src="https://github.com/otaviofbrito/StarGazer-MPI/blob/misc/img/plot_hist.png">
+</p>
 
 ## Help
 
