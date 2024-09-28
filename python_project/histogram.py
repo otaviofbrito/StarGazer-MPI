@@ -65,18 +65,30 @@ def main(argc, argv):
         raise RuntimeError(f"Usage: python {argv[0]} path/to/image.pgm")
 
     img = readpgm(argv[1])
-    plot.imshow(img.matrix, cmap='gray')
-
-    plot.axis('off')
-
     histograma = histogram(img)
 
-    plot.figure()
-    plot.title("Histogram")
-    plot.xlabel("Pixel value")
-    plot.ylabel("Num. of pixels")
-    plot.plot(histograma, color='black')
-    plot.xlim([0, 255])
+    fig, axs = plot.subplots(2, 1, figsize=(8, 10))
+
+    axs[0].imshow(img.matrix, cmap='gray')
+    axs[0].axis('off')
+    axs[0].set_title("Image")
+
+    height, width = (img.height, img.width)
+    center_x = width // 2
+    center_y = height // 2
+
+    axs[0].axvline(x=center_x, color='red', linestyle='-',
+                   linewidth=2) 
+    axs[0].axhline(y=center_y, color='red', linestyle='-',
+                   linewidth=2) 
+
+    axs[1].set_title("Histogram")
+    axs[1].set_xlabel("Pixel value")
+    axs[1].set_ylabel("Num. of pixels")
+    axs[1].plot(histograma, color='black')
+    axs[1].set_xlim([0, 255])
+
+    plot.tight_layout()
     plot.show()
 
     return 0
