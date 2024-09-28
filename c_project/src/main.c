@@ -19,6 +19,17 @@ int main(int argc, char *argv[])
   const int THRESHOLD = atoi(argv[1]);
   const char *PGM_PATH = argv[2];
 
+  FILE *file = fopen(PGM_PATH, "r");
+  if (file)
+  {
+    fclose(file);
+  }
+  else
+  {
+    printf("[ERRO]: Arquivo %s  não encontrado!\n", argv[2]);
+    return EXIT_FAILURE;
+  }
+
   int rank;
   int size;
   int total, N, M;
@@ -136,7 +147,6 @@ int main(int argc, char *argv[])
     threshold_image(img, THRESHOLD);
     dups = find_duplicates(img);
     printf("\nEstrelas duplicadas: %d\n", dups);
-    savePGM(img, "data/output.pgm");
     free(img);
   }
 
